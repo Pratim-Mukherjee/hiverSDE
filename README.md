@@ -1,4 +1,4 @@
-#HIVER TAKE HOME ASSIGNMENT:- "AmazonHelp Support Agent" — Real-data, leakage-aware, reviewable evaluation
+# HIVER TAKE HOME ASSIGNMENT:- "AmazonHelp Support Agent" — Real-data, leakage-aware, reviewable evaluation
 
 This project builds a support agent for AmazonHelp using the real Customer Support on Twitter dataset. The system is intentionally classical, transparent, and auditable: TF-IDF intent classification, retrieval-grounded draft generation, and explicit escalation policy.
 
