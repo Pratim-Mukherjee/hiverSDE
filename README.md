@@ -1,8 +1,8 @@
-# AmazonHelp Support Agent — Real-data, leakage-aware, reviewable evaluation
+#HIVER TAKE HOME ASSIGNMENT:- "AmazonHelp Support Agent" — Real-data, leakage-aware, reviewable evaluation
 
-This project builds a support agent for AmazonHelp using the real Customer Support on Twitter dataset, but it is designed to be honest about what is and is not proven. The system is intentionally classical, transparent, and auditable: TF-IDF intent classification, retrieval-grounded draft generation, and explicit escalation policy.
+This project builds a support agent for AmazonHelp using the real Customer Support on Twitter dataset. The system is intentionally classical, transparent, and auditable: TF-IDF intent classification, retrieval-grounded draft generation, and explicit escalation policy.
 
-The design is meant to be practically useful, not to overstate performance. A first classical/retrieval-based system on noisy public Twitter support data can be credible and useful even when it does not beat a simple keyword baseline on an unreviewed label set. The real goal is to be careful, explainable, and rigorously checked before claiming any quality advantage.
+A first classical/retrieval-based system on noisy public Twitter support data 
 
 ## What this project does
 
@@ -14,7 +14,7 @@ The design is meant to be practically useful, not to overstate performance. A fi
 - Evaluates the system with leakage checks, confusion matrices, per-intent metrics, bootstrap confidence intervals, and McNemar significance testing
 - Includes a human-review workflow so a reviewer can turn the candidate gold set into a genuinely reviewed final evaluation set
 
-This is a classical engineering solution, not a hype-driven LLM demo. The important thing is not whether it is fashionable; it is whether the system is grounded, auditable, and fair to evaluate.
+
 
 ## Why the architecture matters
 
@@ -26,11 +26,10 @@ The pipeline aims to answer three questions clearly:
 2. What historical brand reply is closest to the correct resolution path?
 3. Should this be auto-handled or escalated to a human?
 
-We do not claim the system is perfect. We do claim that it is built around real data and can be evaluated in a way that reviewers can inspect and challenge.
+
 
 ## Real-data-only policy
 
-This repo is intentionally real-data-only in the production path. It does not silently substitute synthetic data when the real dataset is missing.
 
 Valid real-data locations checked in order:
 
@@ -38,7 +37,7 @@ Valid real-data locations checked in order:
 2. data/twcs.csv
 3. data/processed/twcs.csv
 
-If a true TWCS file exists, the project uses it. If not, it fails with a clear error instead of pretending the benchmark is real.
+If a true TWCS file exists PUT IT HERE
 
 ## Gold set and human review workflow
 
@@ -79,12 +78,11 @@ Reviewers fill in the human labels and then use that reviewed file as the final 
 
 ### Final evaluation file
 
-Before the final claim is made, reviewers should either:
+Before the final claim is made, reviewers can either:
 
 - overwrite the final benchmark with the reviewed file, or
 - copy the reviewed data into the final evaluation file used by the evaluator
 
-This is the honest path to a defensible final number.
 
 ## Setup
 
@@ -141,7 +139,7 @@ Relevant endpoints:
 - POST /predict
 - GET /metrics
 
-This makes it easy for reviewers to inspect the live integration without reading code alone.
+
 
 ## Leakage diagnostics and evaluation rigor
 
@@ -167,18 +165,6 @@ It reports:
 - bootstrap 95% confidence intervals
 - McNemar significance test versus the simple baseline
 - reference-based reply similarity against the historical brand response
-
-This is far stronger than a single aggregate number and is exactly the kind of output a serious reviewer wants to see.
-
-## The honest quality statement
-
-A classical retrieval-based support system on messy real Twitter support data is not automatically a strong performer. The honest position is:
-
-- 67.5% intent accuracy is not a bad first result for a classical approach on noisy real support data
-- it is also not a performance claim that should be waved around without caveats
-- the fact that a simple baseline can match or exceed the model is a real red flag, which is why the repo explicitly includes leakage checks, per-intent diagnostics, and a human-review path
-
-This is not a failure of engineering; it is exactly the sort of honest signal you want before claiming a final result. The architecture still matters because it is transparent, grounded, and explainable, but the labels and evaluation dataset are what determine whether the final headline number is defensible.
 
 ## Repository structure
 
@@ -217,17 +203,6 @@ report/
   REPORT.md
 ```
 
-## Submission-ready interpretation
-
-The project is submission-ready as a real-data engineering artifact because it is:
-
-- real-data-only in the training path
-- leakage-aware in evaluation
-- transparent in the diagnostic output
-- browser-accessible through Swagger
-- ready for a final human-reviewed gold pass before publication of a headline score
-
-The current numbers are not the final submission claim. The final claim should only be made after the human-review gold set is filled and the reported metrics are recomputed on that reviewed benchmark.
 
 ## Credits and tooling used
 
