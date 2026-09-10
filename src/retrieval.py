@@ -31,6 +31,11 @@ SIGNOFF_PATTERNS = [
     re.compile(r"\s*\^?[A-Z]{2,4}\s*$"),
     re.compile(r"\s*(?:\^?[A-Z]{2,4}|[A-Z]{2,4})\s*$"),
 ]
+THREAD_MARKER_PATTERNS = [
+    re.compile(r"\s*\b\d+/\d+\s*$"),
+    re.compile(r"\s*[\u2013\u2014\-–—]+\s*$"),
+    re.compile(r"\s*[.:;,!?]+\s*$"),
+]
 
 
 def _strip_signoff(text: str) -> str:
@@ -41,11 +46,23 @@ def _strip_signoff(text: str) -> str:
     return out.strip()
 
 
+def _cleanup_orphan_text(text: str) -> str:
+    out = str(text or "")
+    out = out.replace("\r", " ").replace("\n", " ")
+    out = re.sub(r"\s+", " ", out).strip()
+    for pattern in THREAD_MARKER_PATTERNS:
+        out = pattern.sub("", out)
+    out = re.sub(r"\s+([.,!?;:])", r"\1", out)
+    out = re.sub(r"([.,!?;:]){2,}", r"\1", out)
+    return out.strip()
+
+
 def _templatize(reply_text: str) -> str:
     """Replace brand-reply specifics (order numbers etc.) with placeholders so
     retrieved replies read as reusable templates rather than someone else's
     literal case details leaking into a new customer's reply."""
     out = _strip_signoff(reply_text)
+    out = _cleanup_orphan_text(out)
     for pattern, placeholder in PLACEHOLDER_PATTERNS:
         out = pattern.sub(placeholder, out)
     return out
@@ -84,14 +101,14 @@ class ReplyRetriever:
 
     def draft_reply(self, query_text: str, intent_filter: str = None, k: int = 3):
         hits = self.retrieve(query_text, k=k, intent_filter=intent_filter)
-        if not hits or hits[0]["similarity"] < config.MIN_RETRIEVAL_SIMILARITY_FOR_GROUNDED_REPLY:
+        threshold = config.INTENT_SPECIFIC_GROUNDED_THRESHOLDS.get(intent_filter, config.MIN_RETRIEVAL_SIMILARITY_FOR_GROUNDED_REPLY)
+        if not hits or hits[0]["similarity"] < threshold:
             return {
                 "draft": None,
                 "grounded": False,
                 "evidence": hits,
                 "reason": "No sufficiently similar historical resolution found (max sim "
-                          f"{hits[0]['similarity']:.2f} < threshold "
-                          f"{config.MIN_RETRIEVAL_SIMILARITY_FOR_GROUNDED_REPLY})." if hits else "No corpus matches.",
+                          f"{hits[0]['similarity']:.2f} < threshold {threshold:.2f})." if hits else "No corpus matches.",
             }
         best = hits[0]
         draft = _templatize(best["historical_brand_text"])
@@ -100,5 +117,5 @@ class ReplyRetriever:
             "grounded": True,
             "evidence": hits,
             "reason": f"Adapted from a historical reply to a similar {intent_filter or 'general'} "
-                      f"message (similarity={best['similarity']:.2f}).",
+                      f"message (similarity={best['similarity']:.2f}; threshold={threshold:.2f}).",
         }
