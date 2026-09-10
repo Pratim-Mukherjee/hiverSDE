@@ -113,16 +113,17 @@ ESCALATION_TRIGGER_PHRASES = [
 ]
 
 MIN_CLASSIFIER_CONFIDENCE_FOR_AUTOHANDLE = 0.55
-# Tighten grounded-reply requirements to reduce ungrounded generation on noisy
-# public-support text. Money/account intents are riskier and deserve stricter
-# thresholds than delivery-status queries.
-MIN_RETRIEVAL_SIMILARITY_FOR_GROUNDED_REPLY = 0.12
+# Tighten grounded-reply requirements to reduce near-threshold artifacts on noisy
+# public-support text. We intentionally keep a small cushion above the observed
+# edge cases so a retrieval match must be meaningfully stronger before being used
+# as the basis for a customer-facing reply.
+MIN_RETRIEVAL_SIMILARITY_FOR_GROUNDED_REPLY = 0.14
 INTENT_SPECIFIC_GROUNDED_THRESHOLDS = {
     "billing_or_charge_dispute": 0.18,
     "account_or_access_issue": 0.18,
     "refund_or_return_request": 0.16,
     "order_wrong_or_damaged": 0.15,
     "cancellation_request": 0.14,
-    "delivery_delay_or_missing": 0.12,
-    "general_inquiry_or_other": 0.12,
+    "delivery_delay_or_missing": 0.14,
+    "general_inquiry_or_other": 0.14,
 }

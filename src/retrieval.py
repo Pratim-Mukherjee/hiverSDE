@@ -28,8 +28,9 @@ PLACEHOLDER_PATTERNS = [
     (re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"), "{EMAIL}"),
 ]
 SIGNOFF_PATTERNS = [
-    re.compile(r"\s*\^?[A-Z]{2,4}\s*$"),
-    re.compile(r"\s*(?:\^?[A-Z]{2,4}|[A-Z]{2,4})\s*$"),
+    re.compile(r"\s*\^?[A-Z]{2,5}\s*$", re.IGNORECASE),
+    re.compile(r"\s*(?:\^?[A-Z]{2,5}|[A-Z]{2,5})\s*$", re.IGNORECASE),
+    re.compile(r"\s*(?:\^?[A-Z]{2,5})\s*(?:[.?!,;:]+\s*)*$", re.IGNORECASE),
 ]
 THREAD_MARKER_PATTERNS = [
     re.compile(r"\s*\b\d+/\d+\s*$"),
