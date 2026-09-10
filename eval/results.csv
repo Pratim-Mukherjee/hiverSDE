@@ -1,0 +1,4 @@
+system,intent_accuracy,intent_macro_f1,escalation_precision,escalation_recall,escalation_f1,mean_judge_score,judge_source
+trivial_baseline,0.32,0.069,0.0,0.0,0.0,4.054,heuristic
+simple_baseline,1.0,1.0,0.3,0.079,0.125,3.889,heuristic
+support_agent,1.0,1.0,0.809,1.0,0.894,3.75,heuristic
